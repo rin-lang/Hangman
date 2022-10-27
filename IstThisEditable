@@ -1,0 +1,121 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class HangMan {
+
+    public static void main(String[] args){
+        
+        //Level of Diffiulty
+        //User can choose between easy, medium, hard, and expert modes for hang man
+        //Easy = 1-6 characters, medium = 7-10 characters, hard = 11-15 characters, expert = 16+ 
+        Scanner s = new Scanner(System.in);
+        int difficulty = 0;
+        while(true){
+            System.out.println("""
+                               Choose difficulty of game:
+                               Easy (1-6 letters)
+                               Medium (7-10 letters)
+                               Hard (11-15 letters)
+                               Expert (16+ letters)""");
+            String userInput1 = s.nextLine();
+            
+            if(userInput1.equalsIgnoreCase("easy")){
+                difficulty = 1;
+                break;
+            }
+            else if(userInput1.equalsIgnoreCase("medium")){
+                difficulty = 2;
+                break;
+            }
+            else if(userInput1.equalsIgnoreCase("hard")){
+                difficulty = 3;
+                break;
+            }
+            else if(userInput1.equalsIgnoreCase("expert")){
+                difficulty = 4;
+                break;
+            }
+            else{
+                System.out.println("That mode of difficulty does not currently exist.");
+            }
+        }//end of diffculty selection while loop
+       
+        //Word Generation
+        
+        String word = HangManMethods.randomWord(difficulty);//generate a random word
+        
+        //Array and variable Creation
+        
+        int tracker = 6; //keeps track of how many times the user has guessed
+        //String[] fullWordLetters = HangManMethods.separateLetters(fullWord);//separate the random word given by the letters and put each letter into its own spot
+        String[] answerGiven = new String[word.length()];//create a blank array whose length is same as the word length
+        ArrayList<String> lettersGuessed = new ArrayList<>();//an array list of letters the user has guessed
+        
+        //dealing with user guesses
+        while (HangManMethods.checkPoint(word, answerGiven) && tracker > 0){
+            System.out.println( "\n" + "Enter your guess: ");
+            String userInput2 = s.nextLine();
+            System.out.println("\n" + "Your Guess: " + userInput2);
+
+            //check if it's a possible guess, then check if it's been guessed before, then check if it's a correct guess
+            if(HangManMethods.possibleGuesses(userInput2)){
+                if(HangManMethods.userGuessed(userInput2, lettersGuessed)){
+                    System.out.println("You guessed that already, try something else." + "\n" + "You've Guessed: " + lettersGuessed + "\n");
+                }
+                else{
+                    if(HangManMethods.isItCorrect(userInput2, word)){
+                        System.out.println("That's right!" + "\n" + "You've Guessed: " + lettersGuessed + "\n" + "Lives Left: " + tracker);
+                        HangManMethods.displayHangMan(tracker, true);
+                    }//end of if it's a right guess
+                    else{
+                        tracker--;
+                        System.out.println("That's wrong!" + "\n" + "You've Guessed: " + lettersGuessed + "\n" +"Lives Left: " + tracker);
+                        HangManMethods.displayHangMan(tracker, false);
+                    }
+                }//end of if it's a wrong guess
+            }//end of if it is a letter
+            else{
+                System.out.println("That's not a letter... try again." +"\n");
+            }//end of if it isn't a letter
+
+        }//end of while loop for guesses
+  
+        
+    }//end of main method
+/*
+
+________
+|      |
+|      O
+|     /|\
+|     / \
+|
+_ _ _ _ _ _ 
+    
+*/
+   
+    
+}//end of class
+
+
+
+/*  while(true){
+            System.out.println("Enter a single letter, uppercase or lowercase, to guess.");
+            String userInput = s.nextLine();
+            
+            
+            
+           for(int i = 0; i < 26; i++){
+                if(userInput.equalsIgnoreCase(possibleGuesses[i])){
+                    //lettersGuessed[]
+                    for(int j = 0; i < wordLength; i++){
+                        if(userInput.equalsIgnoreCase(fullWordLetters[i])){
+                            answerGiven[i] = userInput;
+                        }//end of inner if
+                    }//end of inner for while loop
+                }
+                else{
+                    System.out.println("Hey, I told you to enter a single letter, upper or lower case, not " + userInput + ".");
+                }//end of outter if else    
+            }//end of outer for while loop 
+        }//end of while loop */
